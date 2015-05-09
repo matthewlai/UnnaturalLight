@@ -17,6 +17,8 @@
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
+OBJS = support/cdcacm.o
+
 BINARY = WifiLED
 
 OPENCM3_DIR=../libopencm3
