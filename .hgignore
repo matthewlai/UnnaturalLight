@@ -41,3 +41,8 @@ nbproject/
 
 # cscope databases
 cscope.out
+*.bak
+*.bck
+*.gbr
+*.drl
+screenlog.*
