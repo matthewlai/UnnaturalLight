@@ -46,3 +46,5 @@ cscope.out
 *.gbr
 *.drl
 screenlog.*
+*bak
+*cache.lib
