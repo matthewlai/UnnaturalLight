@@ -8,6 +8,7 @@ extern "C" {
 void init_cdcacm(void);
 void poll_cdcacm(void);
 void cdcacm_send(char *data, int size);
+void cdcacm_recv(char *data, int size);
 
 #ifdef __cplusplus
 }
