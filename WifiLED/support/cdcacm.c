@@ -17,7 +17,13 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <sys/times.h>
+#include <sys/unistd.h>
+
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/usb/usbd.h>
@@ -98,7 +104,10 @@ static const struct {
 		.bFunctionLength = sizeof(struct usb_cdc_acm_descriptor),
 		.bDescriptorType = CS_INTERFACE,
 		.bDescriptorSubtype = USB_CDC_TYPE_ACM,
-		.bmCapabilities = 0,
+        
+        // we advertise support for Set_Line_Coding, Set_Control_Line_State, and Get_Line_Coding
+        // we only really need Set_Control_Line_State, but that is not available separately
+        .bmCapabilities = 0x2,
 	},
 	.cdc_union = {
 		.bFunctionLength = sizeof(struct usb_cdc_union_descriptor),
@@ -170,6 +179,9 @@ static const char * usb_strings[] = {
 /* Buffer to be used for control requests. */
 uint8_t usbd_control_buffer[128];
 
+static volatile uint8_t dtr = 0;
+static volatile uint8_t rts = 0;
+
 static int cdcacm_control_request(usbd_device *usbd_dev,
 	struct usb_setup_data *req, uint8_t **buf, uint16_t *len,
 	void (**complete)(usbd_device *usbd_dev, struct usb_setup_data *req))
@@ -180,22 +192,26 @@ static int cdcacm_control_request(usbd_device *usbd_dev,
 
 	switch (req->bRequest) {
 	case USB_CDC_REQ_SET_CONTROL_LINE_STATE: {
-		/*
-		 * This Linux cdc_acm driver requires this to be implemented
-		 * even though it's optional in the CDC spec, and we don't
-		 * advertise it in the ACM functional descriptor.
-		 */
-		return 1;
+		
+        dtr = (req->wValue & (1 << 0)) ? 1 : 0;
+        rts = (req->wValue & (1 << 1)) ? 1 : 0;
+        
+        return USBD_REQ_HANDLED;
 		}
 	case USB_CDC_REQ_SET_LINE_CODING:
 		if (*len < sizeof(struct usb_cdc_line_coding)) {
-			return 0;
+			return USBD_REQ_NOTSUPP;
 		}
 
-		return 1;
+		return USBD_REQ_HANDLED;
 	}
-	return 0;
+	return USBD_REQ_NOTSUPP;
 }
+
+#define RX_BUF_SIZE 4096
+static volatile char rx_buf[RX_BUF_SIZE];
+static volatile size_t rx_buf_head = 0; // where the next character should be inserted
+static volatile size_t rx_buf_tail = 0; // where the next character should be read from
 
 static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
 {
@@ -204,9 +220,33 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
 	char buf[64];
 	int len = usbd_ep_read_packet(usbd_dev, 0x01, buf, 64);
 
-	if (len) {
-		while (usbd_ep_write_packet(usbd_dev, 0x82, buf, len) == 0);
-	}
+    for (int i = 0; i < len; ++i)
+    {
+        if (((rx_buf_head + 1) % RX_BUF_SIZE) == rx_buf_tail)
+        {
+            // drop the rest of the packet
+            // we are overflowing
+            break;
+        }
+        
+        rx_buf[rx_buf_head] = buf[i];
+        rx_buf_head = (rx_buf_head + 1) % RX_BUF_SIZE;
+    }
+}
+
+static char cdcacm_rx_buf_getc(void)
+{
+    // block if there is no data
+    while (rx_buf_tail == rx_buf_head) {}
+    
+    // block if receiving is still in progress (if we saw buf size > 0 already,
+    // by the time receiving finishes, we'll still have buf size > 0)
+    
+    char ret = rx_buf[rx_buf_tail];
+    
+    rx_buf_tail = (rx_buf_tail + 1) % RX_BUF_SIZE;
+    
+    return ret;
 }
 
 static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
@@ -229,7 +269,9 @@ static usbd_device *usbd_dev;
 
 void otg_fs_isr()
 {
+    nvic_disable_irq(NVIC_OTG_FS_IRQ);
     usbd_poll(usbd_dev);
+    nvic_enable_irq(NVIC_OTG_FS_IRQ);
 }
 
 void init_cdcacm(void)
@@ -245,20 +287,47 @@ void init_cdcacm(void)
 			usb_strings, 3,
 			usbd_control_buffer, sizeof(usbd_control_buffer));
 
-	usbd_register_set_config_callback(usbd_dev, cdcacm_set_config);
+    usbd_register_set_config_callback(usbd_dev, cdcacm_set_config);
     
-    nvic_enable_irq (NVIC_OTG_FS_IRQ);
+    nvic_enable_irq(NVIC_OTG_FS_IRQ);
+}
+
+static void usbd_ep_write_packet_with_retry(char *data, int size)
+{
+    if (size == 0 || (!dtr || !rts))
+    {
+        return;
+    }
+    
+    int ret = 0;
+    
+    do
+    {
+        ret = usbd_ep_write_packet(usbd_dev, 0x82, data, size);
+    }
+    while (ret == 0 && dtr && rts);
 }
 
 void cdcacm_send(char *data, int size)
 {
+    nvic_disable_irq(NVIC_OTG_FS_IRQ);
+    
     int i = 0;
     
     while ((size - (i*64)) > 64) {
-        while(usbd_ep_write_packet(usbd_dev, 0x82, (data+(i*64)), 64) == 0);
+        usbd_ep_write_packet_with_retry((data+(i*64)), 64);
         i++;
     }
     
-    while(usbd_ep_write_packet(usbd_dev, 0x82, (data+(i*64)), size - (i*64)) == 0);
+    usbd_ep_write_packet_with_retry((data+(i*64)), size - (i*64));
+    
+    nvic_enable_irq(NVIC_OTG_FS_IRQ);
 }
 
+void cdcacm_recv(char *data, int size)
+{
+    for (int i = 0; i < size; ++i)
+    {
+        data[i] = cdcacm_rx_buf_getc();
+    }
+}
