@@ -17,7 +17,7 @@
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-OBJS = support/cdcacm.o
+OBJS = support/cdcacm.o support/usart.o support/ioimpl.o support/clock.o
 
 BINARY = WifiLED
 
