@@ -1,0 +1,210 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:switches
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L POT RV?
+U 1 1 59DD6C97
+P 4100 4050
+F 0 "RV?" V 3925 4050 50  0000 C CNN
+F 1 "POT" V 4000 4050 50  0000 C CNN
+F 2 "" H 4100 4050 50  0001 C CNN
+F 3 "" H 4100 4050 50  0001 C CNN
+	1    4100 4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L POT RV?
+U 1 1 59DD6D1E
+P 4900 4050
+F 0 "RV?" V 4725 4050 50  0000 C CNN
+F 1 "POT" V 4800 4050 50  0000 C CNN
+F 2 "" H 4900 4050 50  0001 C CNN
+F 3 "" H 4900 4050 50  0001 C CNN
+	1    4900 4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L VCC #PWR?
+U 1 1 59DD6D68
+P 4100 3650
+F 0 "#PWR?" H 4100 3500 50  0001 C CNN
+F 1 "VCC" H 4100 3800 50  0000 C CNN
+F 2 "" H 4100 3650 50  0001 C CNN
+F 3 "" H 4100 3650 50  0001 C CNN
+	1    4100 3650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4100 3650 4100 3900
+Wire Wire Line
+	4100 3750 5150 3750
+Wire Wire Line
+	4900 3750 4900 3900
+Connection ~ 4100 3750
+$Comp
+L GND #PWR?
+U 1 1 59DD6D8A
+P 4100 4400
+F 0 "#PWR?" H 4100 4150 50  0001 C CNN
+F 1 "GND" H 4100 4250 50  0000 C CNN
+F 2 "" H 4100 4400 50  0001 C CNN
+F 3 "" H 4100 4400 50  0001 C CNN
+	1    4100 4400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4100 4200 4100 4400
+Wire Wire Line
+	4100 4300 5650 4300
+Wire Wire Line
+	4900 4300 4900 4200
+Connection ~ 4100 4300
+$Comp
+L SW_SPST SW?
+U 1 1 59DE0449
+P 5650 4050
+F 0 "SW?" H 5650 4175 50  0000 C CNN
+F 1 "SW_SPST" H 5650 3950 50  0000 C CNN
+F 2 "" H 5650 4050 50  0001 C CNN
+F 3 "" H 5650 4050 50  0001 C CNN
+	1    5650 4050
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 59DE04EB
+P 5650 4400
+F 0 "#PWR?" H 5650 4150 50  0001 C CNN
+F 1 "GND" H 5650 4250 50  0000 C CNN
+F 2 "" H 5650 4400 50  0001 C CNN
+F 3 "" H 5650 4400 50  0001 C CNN
+	1    5650 4400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5650 4400 5650 4250
+Connection ~ 5650 4300
+Connection ~ 4900 4300
+$Comp
+L R R?
+U 1 1 59DE051B
+P 5300 3750
+F 0 "R?" V 5380 3750 50  0000 C CNN
+F 1 "10KR" V 5300 3750 50  0000 C CNN
+F 2 "" V 5230 3750 50  0001 C CNN
+F 3 "" H 5300 3750 50  0001 C CNN
+	1    5300 3750
+	0    1    1    0   
+$EndComp
+Connection ~ 4900 3750
+Wire Wire Line
+	5450 3750 5750 3750
+Wire Wire Line
+	5650 3750 5650 3850
+$Comp
+L CONN_01X06 J?
+U 1 1 59DE05BD
+P 6600 4000
+F 0 "J?" H 6600 4350 50  0000 C CNN
+F 1 "CONN_01X06" V 6700 4000 50  0000 C CNN
+F 2 "" H 6600 4000 50  0001 C CNN
+F 3 "" H 6600 4000 50  0001 C CNN
+	1    6600 4000
+	1    0    0    -1  
+$EndComp
+$Comp
+L VCC #PWR?
+U 1 1 59DE0669
+P 6300 3650
+F 0 "#PWR?" H 6300 3500 50  0001 C CNN
+F 1 "VCC" H 6300 3800 50  0000 C CNN
+F 2 "" H 6300 3650 50  0001 C CNN
+F 3 "" H 6300 3650 50  0001 C CNN
+	1    6300 3650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6300 3650 6300 3750
+Wire Wire Line
+	6300 3750 6400 3750
+$Comp
+L GND #PWR?
+U 1 1 59DE0698
+P 6300 4400
+F 0 "#PWR?" H 6300 4150 50  0001 C CNN
+F 1 "GND" H 6300 4250 50  0000 C CNN
+F 2 "" H 6300 4400 50  0001 C CNN
+F 3 "" H 6300 4400 50  0001 C CNN
+	1    6300 4400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6300 4250 6300 4400
+Wire Wire Line
+	6300 4250 6400 4250
+Text Label 4350 4050 0    60   ~ 0
+POT1
+Wire Wire Line
+	4350 4050 4250 4050
+Text Label 5200 4050 0    60   ~ 0
+POT2
+Wire Wire Line
+	5200 4050 5050 4050
+Text Label 5750 3750 0    60   ~ 0
+SW
+Connection ~ 5650 3750
+Text Label 6250 4150 2    60   ~ 0
+SW
+Wire Wire Line
+	6250 4150 6400 4150
+Text Label 6250 4050 2    60   ~ 0
+POT2
+Wire Wire Line
+	6250 4050 6400 4050
+Text Label 6250 3950 2    60   ~ 0
+POT1
+Wire Wire Line
+	6250 3950 6400 3950
+$EndSCHEMATC
