@@ -29,7 +29,6 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:matthew
-LIBS:led_board-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
@@ -384,19 +383,8 @@ F 3 "" H 5150 1550 50  0000 C CNN
 	1    5150 1550
 	1    0    0    -1  
 $EndComp
-$Comp
-L R R5
-U 1 1 59DAE117
-P 4300 1600
-F 0 "R5" V 4380 1600 50  0000 C CNN
-F 1 "0R" V 4300 1600 50  0000 C CNN
-F 2 "Resistors_SMD:R_2512" V 4230 1600 50  0001 C CNN
-F 3 "" H 4300 1600 50  0001 C CNN
-	1    4300 1600
-	0    1    1    0   
-$EndComp
 Wire Wire Line
-	4150 1600 3800 1600
+	3800 1600 4550 1600
 Connection ~ 3800 1600
 Wire Wire Line
 	3800 1950 3800 1850
@@ -404,7 +392,5 @@ Wire Wire Line
 	3800 1850 4550 1850
 Wire Wire Line
 	4550 1600 4550 1950
-Wire Wire Line
-	4450 1600 4550 1600
 Connection ~ 4550 1850
 $EndSCHEMATC

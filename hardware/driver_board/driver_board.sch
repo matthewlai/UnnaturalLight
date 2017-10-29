@@ -29,7 +29,6 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:matthew
-LIBS:driver_board-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
@@ -745,4 +744,6 @@ Text Label 6950 4050 2    60   ~ 0
 A3
 Wire Wire Line
 	6950 4050 7050 4050
+Text Notes 5350 2700 0    60   ~ 0
+IPB22N03
 $EndSCHEMATC
