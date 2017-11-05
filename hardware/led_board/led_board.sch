@@ -29,6 +29,7 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:matthew
+LIBS:led_board-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
@@ -124,7 +125,7 @@ U 1 1 56B1230B
 P 5600 3250
 F 0 "P2" H 5600 3450 50  0000 C CNN
 F 1 "CONN_01X03" V 5700 3250 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x03" H 5600 3250 50  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm_SMD_Pin1Left" H 5600 3250 50  0001 C CNN
 F 3 "" H 5600 3250 50  0000 C CNN
 	1    5600 3250
 	1    0    0    -1  
@@ -151,7 +152,7 @@ U 1 1 56B1263F
 P 5600 2600
 F 0 "P1" H 5600 2800 50  0000 C CNN
 F 1 "CONN_01X03" V 5700 2600 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Angled_1x03" H 5600 2600 50  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03_Pitch2.54mm_SMD_Pin1Left" H 5600 2600 50  0001 C CNN
 F 3 "" H 5600 2600 50  0000 C CNN
 	1    5600 2600
 	1    0    0    -1  
